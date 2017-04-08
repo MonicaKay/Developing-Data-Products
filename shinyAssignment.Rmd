@@ -1,0 +1,72 @@
+---
+title: "Assignment: Shiny Application and Reproducible Pitch"
+author: "MonicaKay"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  ioslides_presentation:
+    small: true
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(plotly)
+library(ggplot2)
+```
+
+## Project Overview
+
+This assignment was completed for the Developing Data Products course as part of the Coursera Data Science Specialization.
+
+The goal of this project was to build a Shiny application which uses a prediction algorithm to calculate the distance it takes for a car to stop given a particular speed. 
+
+The Shiny app developed for this project is available at: https://monicakay.shinyapps.io/App-1/
+
+The source code for this project, including the ui.R and server.R files, are available on my GitHub repo: https://github.com/MonicaKay/Developing-Data-Products
+
+## Background Information
+
+"Studies have shown that it takes the average driver from one-half to three-quarters of a second to perceive a need to hit the brakes, and another three-quarters of a second to move your foot from the gas to the brake pedal.  Everybody's reaction times are different, but that's up to a full one-and-a-half seconds between when you first start to realize you're in trouble and before you even start to slow down.
+
+When it comes to braking, always follow these three key defensive driving principles: 
+
++ **Keep your speed down.** The slower you drive, the shorter your stopping distance.
++ **Look far ahead to increase your warning time.**   By always looking as far down the road as you can, you'll see emerging hazards and the brake lights of cars ahead of you sooner.
++ **Move your foot early.**  By taking your foot off the gas and pressing on the brake pedal lightly at the first sign that you need to slow down, you get a jump on your reaction time, and you protect your backside by giving drivers behind you an earlier warning sign."
+
+Source: http://www.government-fleet.com/content/driver-care-know-your-stopping-distance.aspx
+
+## Application Funtionality
+
+This application requires the user to select a speed that a car can travel (between 4 and 25 mph).  The selection is made using up and down button selections as numerical input.  The number 20 is selected as default.
+
+The application takes the input and reactively updates the plot on the right side of the application.  This plot shows all data points from the cars dataset as well as the linear model used for the prediction algorithm.  
+
+A red square marker is plotted along the model, showing the predicted distance value for the selected car speed.
+
+Additionally, on the right side of the application below the plot, there is a numerical representation of the distance, where the red square marker is plotted.
+
+## Cars Dataset
+
+The dataset used for this prediction was the "cars" dataset from the R library.  The data gives the speed of cars and the distances taken to stop. Note that the data were recorded in the 1920s.
+
+```{r, echo=FALSE, warning=FALSE}
+data(cars)
+cars <- as.data.frame(cars)
+
+summary(cars)
+```
+
+The prediction algorithm was based on a linear model:
+
+model <- lm(dist ~ speed, data = cars)
+
+## Car Speed and Distances Taken to Stop
+
+```{r, echo=FALSE, warning=FALSE}
+data(cars)
+cars <- as.data.frame(cars)
+model <- lm(dist ~ speed, data = cars)
+
+plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode="markers", name = "Car Data") %>%
+  add_lines(y = fitted(model), name = "Linear Model")
+```
+
